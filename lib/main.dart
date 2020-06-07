@@ -22,7 +22,12 @@ class MyMaterial extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScopedModel(
       model: model,
+      
       child: MaterialApp(
+      theme: ThemeData(
+        primaryColor: Colors.black,
+        accentColor: Colors.grey
+      ),
         routes: {
           '/': (context) => SplashPage(),
           '/LoginPage': (context) => LoginPage(),

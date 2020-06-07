@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import './BidPrice.dart';
 
 class Order {
-  final String serviceName, desc, orderID, subService,uid;
+  final String serviceName, desc, orderID, subService;
   String imageURL;
   final int count, serviceID, subServiceID;
   double lat, long;
@@ -11,7 +11,7 @@ class Order {
   final List<BidPrice> price;
 
   Order({
-    @required this.uid,
+    
     @required this.serviceName,
     @required this.desc,
     @required this.serviceID,
@@ -56,7 +56,7 @@ class Order {
       imageURL: map['imageURL'],
       isComplete: map['isComplete'],
       serviceName: map['serviceName'],
-      uid: map['uid'],
+      
     );
   }
 

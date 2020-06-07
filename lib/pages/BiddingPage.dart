@@ -24,70 +24,152 @@ class _BiddingPageState extends State<BiddingPage> {
     _staticModel = ScopedModel.of(context, rebuildOnChange: false);
   }
 
+  Widget _buildStartingBid(Order _order, int index) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(15, 0, 15, 5),
+      padding: EdgeInsets.all(10.0),
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.1,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
+          border: Border.all(color: Colors.black54, width: 1.0),
+          color: Colors.white),
+      child: Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text('Starting at'),
+          Text(
+            'Rs. ${_order.price[index].price.toString()}',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+          )
+        ],
+      )),
+    );
+  }
+
+  Widget _buildOthersBid(Order _order, int index) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(15, 20, 15, 5),
+      padding: EdgeInsets.all(10.0),
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.075,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
+          border: Border.all(color: Colors.black54, width: 1.0),
+          color: Colors.white),
+      child: Center(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(_order.price[index].companyName,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
+          Text(
+            "Rs. " + _order.price[index].price.toString(),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+          )
+        ],
+      )),
+    );
+  }
+
   Widget _buildBidList() {
-    return StreamBuilder<DocumentSnapshot>(
-      builder: (_, snapshot) {
-        if (snapshot.hasData) {
-          Order _order = Order.fromMap(map: snapshot.data.data);
-          return Container(
-            height: _height * 0.5,
-            width: _width,
-            child: ListView.builder(
-              itemBuilder: (_, index) {
-                return Text(
-                  _order.price[index].companyName == null
-                      ? 'Bid Starting at ${_order.price[index].price.toString()}'
-                      : _order.price[index].companyName +
-                          ' : ' +
-                          _order.price[index].price.toString(),
-                  textAlign: TextAlign.center,
-                );
-              },
-              itemCount: _order.price.length,
-            ),
-          );
-        } else
-          return Container();
-      },
-      stream: _staticModel.getBiddingStream(widget.order.orderID),
+    return Expanded(
+      child: StreamBuilder<DocumentSnapshot>(
+        builder: (_, snapshot) {
+          if (snapshot.hasData) {
+            Order _order = Order.fromMap(map: snapshot.data.data);
+            return Container(
+              height: _height * 0.5,
+              width: _width,
+              child: ListView.builder(
+                itemBuilder: (_, index) {
+                  return _order.price[index].companyName == null
+                      ? _buildStartingBid(_order, index)
+                      : _buildOthersBid(_order, index);
+                },
+                itemCount: _order.price.length,
+              ),
+            );
+          } else
+            return Padding(
+              padding: EdgeInsets.only(top: _height * 0.4),
+              child: Center(
+                  child: CircularProgressIndicator(
+                backgroundColor: Color(0XFF000000),
+                valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+              )),
+            );
+        },
+        stream: _staticModel.getBiddingStream(widget.order.orderID),
+      ),
     );
   }
 
   Widget _buildBidInput() {
     return Container(
-      width: _width * 0.7,
+      width: _width * 0.8,
+      height: _height * 0.05,
       child: TextField(
         controller: _controller,
-        decoration: InputDecoration(hintText: 'Enter your bid'),
+        decoration: InputDecoration(
+          hintText: 'Enter your bid',
+          border:
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+        ),
         keyboardType: TextInputType.number,
       ),
     );
   }
 
   Widget _buildBidButton() {
-    return MaterialButton(
-      onPressed: () {
-        if (_controller.text.isEmpty) return;
+    return Container(
+      width: _width * 0.17,
+      color: Colors.black,
+      child: MaterialButton(
+        onPressed: () {
+          if (_controller.text.isEmpty) return;
 
-        _staticModel.addBid(widget.order, double.parse(_controller.text));
-        _controller.text = '';
+          _staticModel.addBid(widget.order, double.parse(_controller.text));
+          _controller.text = '';
 
-        this.setState(() {});
-      },
-      child: Text('BID'),
+          this.setState(() {});
+        },
+        child: Icon(
+          Icons.send,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 
   Widget _buildBody() {
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(top: _height * 0.1),
+    return Padding(
+      padding: EdgeInsets.only(top: _height * 0.02),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          _buildBidList(),
-          _buildBidInput(),
-          _buildBidButton(),
-        ],
+        children: <Widget>[_buildBidList(), _buildBiddingInput()],
+      ),
+    );
+  }
+
+  Widget _buildAppBar() {
+    return AppBar(
+      title: Text(
+        'Bidding Page',
+        style: TextStyle(color: Colors.white),
+      ),
+      elevation: 4,
+      backgroundColor: Colors.black,
+    );
+  }
+
+  Widget _buildBiddingInput() {
+    return Container(
+      margin: EdgeInsets.only(left: 10),
+      padding: EdgeInsets.only(bottom: 10),
+      width: _width,
+      child: Row(
+        children: <Widget>[_buildBidInput(), _buildBidButton()],
       ),
     );
   }
@@ -97,6 +179,8 @@ class _BiddingPageState extends State<BiddingPage> {
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: Colors.grey[200],
+      appBar: _buildAppBar(),
       body: _buildBody(),
     );
   }

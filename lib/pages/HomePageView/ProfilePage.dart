@@ -1,28 +1,29 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:share/share.dart';
 
-
 import '../../scoped_model/MainModel.dart';
+
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-   Widget _buildAppBar() {
+  Widget _buildAppBar() {
     return AppBar(
       title: Text(
-        'My Profile',
+        'Merchant Profile',
         style: TextStyle(color: Colors.white),
       ),
       elevation: 4,
       backgroundColor: Colors.black,
-     
     );
   }
-   Widget _buildProfileData() {
+
+  Widget _buildProfileData() {
     return ScopedModelDescendant<MainModel>(builder: (_, __, model) {
       return Row(
         children: <Widget>[
@@ -36,9 +37,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   model.currentUser.name,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 21),
                 ),
-               Text(
+                Text(
                   model.currentUser.email,
-                  style: TextStyle( fontSize: 21),
+                  style: TextStyle(fontSize: 21),
                 ),
               ],
             ),
@@ -126,13 +127,21 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
                 child: _buildServiceItems('Rate Franzo', Icons.star)),
             _buildDivider(),
+            GestureDetector(
+                onTap: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.of(context).pushReplacementNamed('/');
+                },
+                child:
+                    _buildServiceItems('Sign out', Icons.power_settings_new)),
+            _buildDivider(),
           ],
         ),
       ),
     );
   }
 
-   Widget _buildBody() {
+  Widget _buildBody() {
     return Column(
       children: <Widget>[
         _buildInfo(),

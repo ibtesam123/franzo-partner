@@ -92,9 +92,11 @@ class _SignupPageState extends State<SignupPage> {
         validator: (String value) {
           if (value.isEmpty) {
             return 'Password cannot be empty';
-          } else if (value != _controller.text) {
-            return 'Password not same';
-          } else
+          } 
+          // else if (value != _controller.text) {
+          //   return 'Password not same';
+          // } 
+          else
             return null;
         },
       ),
