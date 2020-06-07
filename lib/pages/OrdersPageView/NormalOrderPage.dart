@@ -73,7 +73,8 @@ class _NormalOrderPageState extends State<NormalOrderPage> {
             _buildOrderTitle(order.serviceName),
             _buildOrderSubService(order.subService),
             SizedBox(height: 10.0),
-            _buildOrderDetail(order.desc)
+            _buildOrderDetail(order.desc),
+            
           ],
         ),
       ),
