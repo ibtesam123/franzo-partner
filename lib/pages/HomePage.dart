@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import './HomePageView/OrdersPage.dart';
 import './HomePageView/ProfilePage.dart';
+import './HomePageView/CompletedPage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> {
       scrollDirection: Axis.horizontal,
       children: <Widget>[
         OrdersPage(),
+        CompletedPage(),
         ProfilePage(),
       ],
     );
@@ -62,13 +64,14 @@ class _HomePageState extends State<HomePage> {
             topLeft: const Radius.circular(10.0),
             topRight: const Radius.circular(10.0)),
         child: Container(
-          height: _height * 0.08,
+          height: _height * 0.06,
           padding: EdgeInsets.symmetric(vertical: 5.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              buildAppBarIcons('Orders', Icons.work, 0),
-              buildAppBarIcons('Profile', Icons.portrait, 1),
+              buildAppBarIcons('Leads', Icons.work, 0),
+              buildAppBarIcons('Completed', Icons.check, 1),
+              buildAppBarIcons('Profile', Icons.portrait, 2),
             ],
           ),
         ),

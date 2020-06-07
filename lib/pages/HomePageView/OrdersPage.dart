@@ -51,7 +51,7 @@ class _OrdersPageState extends State<OrdersPage>
   Widget _buildAppBar() {
     return AppBar(
       title: Text(
-        'My Orders',
+        'My Leads',
         style: TextStyle(color: Colors.white),
       ),
       elevation: 4,
